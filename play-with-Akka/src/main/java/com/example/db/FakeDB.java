@@ -1,4 +1,5 @@
-package com.example.repository;
+package com.example.db;
+
 
 import java.util.HashMap;
 
