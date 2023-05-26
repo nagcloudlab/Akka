@@ -1,6 +1,5 @@
 package com.example.db;
 
-
 import java.util.HashMap;
 
 public class FakeDB {
