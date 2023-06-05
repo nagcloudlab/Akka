@@ -28,6 +28,7 @@ public class Application {
         FakeDB.balanceSheet.put(1, 100.0);
 
         ActorRef<VerificationQuery> verificationActorWorker=ActorSystem.create(VerificationActor.create(),"verificationActorWorker");
+
         ServiceKey<VerificationQuery> serviceKey=ServiceKey.create(VerificationQuery.class,"verification-key");
 
         // GroupRouter

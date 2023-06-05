@@ -1,4 +1,4 @@
-package com.example.iii.fault;
+package com.example.iii;
 
 import akka.actor.typed.*;
 import akka.actor.typed.javadsl.AbstractBehavior;
@@ -8,14 +8,10 @@ import akka.actor.typed.javadsl.Receive;
 
 public class Application1 {
     public static void main(String[] args) {
-
         ActorRef<Protocol.Command> actorRef = ActorSystem.create(Boss.create(), "boss");
         actorRef.tell(new Protocol.Hello("1"));
         actorRef.tell(new Protocol.Hello("2"));
         actorRef.tell(new Protocol.Fail("fail-1"));
-//        actorRef.tell(new Protocol.Hello("3"));
-//        actorRef.tell(new Protocol.Fail("fail-2"));
-
     }
 
 

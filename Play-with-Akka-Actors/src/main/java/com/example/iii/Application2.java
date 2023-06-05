@@ -1,4 +1,4 @@
-package com.example.iii.fault;
+package com.example.iii;
 
 import akka.actor.typed.*;
 import akka.actor.typed.javadsl.AbstractBehavior;
