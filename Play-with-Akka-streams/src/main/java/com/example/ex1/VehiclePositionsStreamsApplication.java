@@ -1,8 +1,9 @@
-package com.example;
+package com.example.ex1;
 
 import akka.*;
 import akka.actor.typed.*;
 import akka.actor.typed.javadsl.*;
+import akka.stream.*;
 import akka.stream.javadsl.*;
 import akka.stream.javadsl.Flow;
 
@@ -10,7 +11,7 @@ import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class AkkaStreamsApp {
+public class VehiclePositionsStreamsApplication {
     public static void main(String[] args) {
 
         Map<Integer, VehiclePositionMessage> vehicleTrackingMap = new HashMap<>();
@@ -27,7 +28,7 @@ public class AkkaStreamsApp {
         //flow 2 - get position for each van as a VPMs with a call to the lookup method (create a new instance of
         //utility functions each time). Note that this process isn't instant so should be run in parallel.
         Flow<Integer, VehiclePositionMessage, NotUsed> vehiclePostions = Flow.of(Integer.class)
-                .mapAsyncUnordered(8,vehicleId -> {
+                .mapAsyncUnordered(8, vehicleId -> {
                     System.out.println("Requesting Position for vehicle " + vehicleId);
                     CompletableFuture<VehiclePositionMessage> future = new CompletableFuture<>();
                     UtilityFunctions utilityFunctions = new UtilityFunctions();
@@ -57,22 +58,63 @@ public class AkkaStreamsApp {
 
         ActorSystem actorSystem = ActorSystem.create(Behaviors.empty(), "actorSystem");
 
-        CompletionStage<VehicleSpeed> result =
-                source
-                        .via(vehicleIds)
-                        .async()
-                        .via(vehiclePostions)
-                        .async()
-                        .via(vehicleSpeeds)
-                        .via(speedFilter)
-                        .toMat(sink, Keep.right())
-                        .run(actorSystem);
+//        // A. Simple DSL
+//        CompletionStage<VehicleSpeed> result =
+//                source
+//                        .via(vehicleIds)
+//                        .async()
+//                        .via(vehiclePostions)
+//                        .async()
+//                        .via(vehicleSpeeds)
+//                        .via(speedFilter)
+//                        .toMat(sink, Keep.right())
+//                        .run(actorSystem);
+
+
+        // B. Graph DSL
+
+        RunnableGraph<CompletionStage<VehicleSpeed>> graph = RunnableGraph.fromGraph(
+                GraphDSL.create(sink, (builder, out) -> {
+                    SourceShape<String> sourceShape = builder.add(source);
+                    FlowShape<String, Integer> vehicleIdsShape = builder.add(vehicleIds);
+                    //FlowShape<Integer, VehiclePositionMessage> vehiclePositionsShape = builder.add(vehiclePostions.async());
+                    FlowShape<VehiclePositionMessage, VehicleSpeed> vehicleSpeedsShape = builder.add(vehicleSpeeds);
+                    FlowShape<VehicleSpeed, VehicleSpeed> speedFilterShape = builder.add(speedFilter);
+
+                    UniformFanOutShape<Integer, Integer> balance =
+                            builder.add(Balance.create(8, true));
+
+                    UniformFanInShape<VehiclePositionMessage, VehiclePositionMessage> merge = builder.add(Merge.create(8));
+
+                    builder
+                            .from(sourceShape)
+                            .via(vehicleIdsShape)
+                            .viaFanOut(balance);
+
+                    for (int i = 0; i < 8; i++) {
+                        builder.from(balance)
+                                .via(builder.add(vehiclePostions.async()))
+                                .toFanIn(merge);
+                    }
+
+                    builder
+                            .from(merge)
+                            .via(vehicleSpeedsShape)
+                            .via(speedFilterShape)
+                            .to(out);
+
+                    return ClosedShape.getInstance();
+                })
+        );
+
+        CompletionStage<VehicleSpeed> result = graph.run(actorSystem);
 
         result.whenComplete((value, throwable) -> {
             if (throwable != null) {
                 System.out.println("Something went wrong " + throwable);
             } else {
                 System.out.println("Vehicle " + value.getVehicleId() + " was going at a speed of " + value.getSpeed());
+                actorSystem.terminate();
             }
         });
 

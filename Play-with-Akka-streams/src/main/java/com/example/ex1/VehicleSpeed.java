@@ -1,4 +1,4 @@
-package com.example;
+package com.example.ex1;
 
 public class VehicleSpeed {
     private int vehicleId;
