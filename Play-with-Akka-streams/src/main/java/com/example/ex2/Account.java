@@ -1,13 +1,12 @@
 package com.example.ex2;
 
-import java.math.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 public class Account {
+
     private int id;
     private BigDecimal balance;
     private List<Transaction> transactions;

@@ -1,5 +1,7 @@
 package com.example.ex2;
 
+import java.math.BigDecimal;
+
 public class Transfer {
 
     private Transaction from;
@@ -17,5 +19,4 @@ public class Transfer {
     public Transaction getTo() {
         return to;
     }
-
 }
