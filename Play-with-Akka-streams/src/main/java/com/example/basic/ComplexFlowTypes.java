@@ -1,4 +1,4 @@
-package com.example.basics;
+package com.example.basic;
 
 import akka.*;
 import akka.actor.typed.*;
@@ -7,8 +7,6 @@ import akka.stream.*;
 import akka.stream.javadsl.*;
 import akka.stream.javadsl.Flow;
 
-import java.time.*;
-import java.util.*;
 import java.util.concurrent.*;
 
 public class ComplexFlowTypes {

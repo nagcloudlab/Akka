@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-stream_${scala.binary.version}</artifactId>
+            <artifactId>akka-stream-typed_${scala.binary.version}</artifactId>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

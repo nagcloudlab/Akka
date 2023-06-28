@@ -11,7 +11,7 @@ import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class VehiclePositionsStreamsApplication {
+public class VehiclePositionsAndSpeed {
     public static void main(String[] args) {
 
         Map<Integer, VehiclePositionMessage> vehicleTrackingMap = new HashMap<>();
