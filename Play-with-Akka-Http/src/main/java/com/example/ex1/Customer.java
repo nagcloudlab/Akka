@@ -1,4 +1,4 @@
-package com.example;
+package com.example.ex1;
 
 
 import com.fasterxml.jackson.annotation.*;

@@ -1,4 +1,4 @@
-package ex2.http;
+package com.example.ex2.http;
 
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.javadsl.AskPattern;
@@ -11,10 +11,10 @@ import akka.http.javadsl.model.StatusCodes;
 import akka.http.javadsl.server.Route;
 import akka.http.javadsl.unmarshalling.Unmarshaller;
 import akka.japi.function.Function;
+import com.example.ex2.actor.*;
+import com.example.ex2.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ex2.actor.*;
-import ex2.model.*;
 
 import java.time.Duration;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package ex2.client;
+package com.example.ex2.client;
 
 import java.io.*;
 import java.net.HttpURLConnection;

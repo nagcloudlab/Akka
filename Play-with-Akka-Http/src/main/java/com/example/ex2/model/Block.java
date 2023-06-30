@@ -1,4 +1,4 @@
-package ex2.model;
+package com.example.ex2.model;
 
 
 import java.util.List;

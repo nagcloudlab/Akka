@@ -1,6 +1,6 @@
-package ex2.server;
+package com.example.ex2.server;
 
-import ex2.http.*;
+import com.example.ex2.http.*;
 
 public class Main {
     public static void main(String[] args) {
